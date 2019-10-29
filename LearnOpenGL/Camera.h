@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Cube.h"
 #include "Light.h"
+#include "Flashlight.h"
 
 class Camera : public Object
 {
@@ -24,6 +25,7 @@ public:
 	GameObject gameObject;
 	Cube cube;
 	Light light;
+	Flashlight mFlashlight;
 	const static unsigned int count = 10;
 	glm::vec3 modelPositions[count];
 	glm::vec3 cubePositions[count];
@@ -31,5 +33,3 @@ public:
 	float yaw; //Ò¡Í·
 	float roll; // ·­¹ö
 };
-
-//unsigned int Camera::count = 10;

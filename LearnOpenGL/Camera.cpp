@@ -62,6 +62,7 @@ void Camera::Update()
 	model = glm::translate(model, light.transform.position);
 	light.pShader->SetModelViewProjection(model, view, projection);
 	light.Update();
+	mFlashlight.Update();
 }
 
 void Camera::LateUpdate()
