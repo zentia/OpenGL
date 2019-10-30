@@ -7,14 +7,14 @@ uniform vec3 model;
 uniform vec3 view;
 uniform vec3 projection;
 
-out vec3 position;
-out vec3 normal;
+out vec3 FragPos;
+out vec3 Normal;
 out vec2 TexCoord;
 
 void main()
 {
-	position = model * aVertex;
+	FragPos = model * aVertex;
 	gl_Position = projection * view * position;
-	normal = aNormal;
+	Normal = aNormal;
 	TexCoord = aTexCoord;
 }

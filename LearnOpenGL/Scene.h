@@ -9,6 +9,5 @@ public:
 	~Scene();
 	void Update();
 	void LateUpdate();
-	Flashlight flashlight;
 };
 

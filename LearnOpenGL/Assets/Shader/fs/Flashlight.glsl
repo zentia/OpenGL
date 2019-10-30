@@ -26,12 +26,33 @@ struct Light
 };
 
 uniform Light light;
+uniform vec3 cameraPos;
 
-in vec3 position;
-in vec3 normal;
+in vec3 FragPos;
+in vec3 Normal;
 in vec2 TexCoord;
 
 void main()
 {
-	FragColor = vec4(1.0f,1.0f,1.0f,1.0f);
-} 
+	float theta = dot(lightDir, normalize(-light.direction));
+
+	if (theta > light.cutOff)
+	{
+		float distance = length(light.position - position);
+		float attenuation = 1.0 / (constant + light.linear * distance + light.quadratic * distance * distance);
+		float3 ambient = light.ambient;
+		float3 lightDir = normalize(FragPos - light.position);
+		float3 norm = normalize(Normal);
+		float diff = max(dot(lightDir, norm), 0.0);
+		float3 diffuse = diff * light.diffuse * vec3(texture(material.diffuse,TexCoord));
+		float3 viewDir = normalize(FragPos - cameraPos); 
+		float ref = reflect(-lightDir, norm);
+		float value = pow(max(dot(viewDir, ref), 0.0), material.shininess);
+		float3 specular = value * light.specular * vec3(texture(material.specular, TexCoord));
+		FragColor = vec4((ambient + diffuse + specular) * attenuation, 1.0);
+	}
+	else
+	{
+		FragColor = vec4(light.ambient * vec3(texture(material.diffuse, TexCoords)),1.0);
+	}
+}

@@ -9,10 +9,6 @@ class GameObject : public Object
 {
 public:
 	Transform transform;
-	Shader* pShader;
-	Texture* pTexture1;
-	Texture* pTexture2;
-	Mesh* pMesh;
 	GameObject();
 	~GameObject();
 	void Update();

@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Application.h"
 #include "InputHelper.h"
+#include "Flashlight.h"
 
 Camera::Camera()
 {
@@ -12,12 +13,24 @@ Camera::Camera()
 	pitch = 0;
 	yaw = 0;
 	roll = 0;
+	mFlashlight = new Flashlight(this);
 }
 
 
 Camera::~Camera()
 {
-	
+	delete mFlashlight;
+}
+
+glm::mat4 Camera::GetViewMatrix()
+{
+	glm::mat4 view = glm::lookAt(position, position + Front, cameraUp);
+	return view;
+}
+
+glm::mat4 Camera::GetProjectionMatrix()
+{
+	return glm::perspective(glm::radians(InputHelper::instance->fov), (float)Application::SCR_WIDTH / (float)Application::SCR_HEIGHT, 0.1f, 1000.0f);
 }
 
 void Camera::Update()
@@ -29,12 +42,9 @@ void Camera::Update()
 	gameObject.Update();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::rotate(model, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 view = glm::lookAt(position, position + cameraFront, cameraUp);
-	gameObject.pShader->setMatrix4fv("view", view);
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(InputHelper::instance->fov), (float)Application::SCR_WIDTH / (float)Application::SCR_HEIGHT, 0.1f, 1000.0f);
+	gameObject.pShader->setMatrix4fv("view", GetViewMatrix());
+	auto projection = GetProjectionMatrix();
 	gameObject.pShader->setMatrix4fv("projection", projection);
-	
 	gameObject.pMesh->Update();
 	for (unsigned int i = 0; i < count; i++)
 	{
@@ -62,7 +72,7 @@ void Camera::Update()
 	model = glm::translate(model, light.transform.position);
 	light.pShader->SetModelViewProjection(model, view, projection);
 	light.Update();
-	mFlashlight.Update();
+	mFlashlight->Update();
 }
 
 void Camera::LateUpdate()
@@ -76,19 +86,19 @@ void Camera::LateUpdate()
 		}
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			position += cameraSpeed * cameraFront;
+			position += cameraSpeed * Front;
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			position -= cameraSpeed * cameraFront;
+			position -= cameraSpeed * Front;
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			position -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+			position -= glm::normalize(glm::cross(Front, cameraUp)) * cameraSpeed;
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
-			position += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+			position += glm::normalize(glm::cross(Front, cameraUp)) * cameraSpeed;
 		}
 		float sensitivity = 0.05f;
 		float xoffset = InputHelper::instance->xoffset * sensitivity;
@@ -102,6 +112,6 @@ void Camera::LateUpdate()
 		direction.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
 		direction.y = sin(glm::radians(pitch));
 		direction.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-		cameraFront = glm::normalize(direction);
+		Front = glm::normalize(direction);
 	}
 }
