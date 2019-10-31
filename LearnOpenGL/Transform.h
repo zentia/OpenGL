@@ -12,7 +12,5 @@ public:
 	glm::vec3 localRatation;
 	glm::vec3 localScale;
 	Transform();
-	glm::mat4 worldToLocalMatrix();
-	glm::mat4 localToWorldMatrix();
 };
 

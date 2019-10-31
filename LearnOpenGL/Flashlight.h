@@ -19,6 +19,5 @@ public:
 	Texture* pSpecular;
 	Transform transform;
 	void Update();
-	void SetModelViewProjectioMatrix();
 };
 

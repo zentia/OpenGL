@@ -11,4 +11,6 @@
 #include <Windows.h>
 #include "stb_image.h"
 
+#define PRINT_DEBUG
+
 glm::vec3 MakePosition();

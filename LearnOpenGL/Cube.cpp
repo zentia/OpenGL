@@ -67,7 +67,6 @@ Cube::~Cube()
 
 void Cube::Update()
 {
-	
 	pShader->setFloat("material.shininess", 32.0f);
 	glm::vec3 diffuseColor = glm::vec3(1.0f);
 	glm::vec3 ambientColor = glm::vec3(0.0f);

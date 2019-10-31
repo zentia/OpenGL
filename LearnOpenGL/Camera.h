@@ -32,6 +32,7 @@ public:
 	float pitch;//µãÍ·
 	float yaw; //Ò¡Í·
 	float roll; // ·­¹ö
+	glm::mat4 GetModelMatrix(glm::vec3 position, glm::vec3 ratation, glm::vec3 scale);
 	glm::mat4 GetViewMatrix();
 	glm::mat4 GetProjectionMatrix();
 };

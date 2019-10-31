@@ -3,14 +3,5 @@
 Transform::Transform()
 {
 	position = MakePosition();
-}
-
-glm::mat4 Transform::localToWorldMatrix()
-{
-
-}
-
-glm::mat4 Transform::worldToLocalMatrix()
-{
-
+	scale = glm::vec3(1.0f);
 }

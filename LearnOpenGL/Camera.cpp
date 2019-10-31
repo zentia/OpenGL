@@ -22,6 +22,18 @@ Camera::~Camera()
 	delete mFlashlight;
 }
 
+glm::mat4 Camera::GetModelMatrix(glm::vec3 position, glm::vec3 ratation, glm::vec3 scale)
+{
+	glm::mat4 model = glm::mat4(1.0f);
+
+	model = glm::translate(model, position);
+	model = glm::rotate(model, glm::radians(ratation.x), glm::vec3(1, 0, 0));
+	model = glm::rotate(model, glm::radians(ratation.y), glm::vec3(0, 1, 0));
+	model = glm::rotate(model, glm::radians(ratation.z), glm::vec3(0, 0, 1));
+	model = glm::scale(model, scale);
+	return model;
+}
+
 glm::mat4 Camera::GetViewMatrix()
 {
 	glm::mat4 view = glm::lookAt(position, position + Front, cameraUp);
@@ -42,18 +54,7 @@ void Camera::Update()
 	gameObject.Update();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::rotate(model, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	gameObject.pShader->setMatrix4fv("view", GetViewMatrix());
 	auto projection = GetProjectionMatrix();
-	gameObject.pShader->setMatrix4fv("projection", projection);
-	gameObject.pMesh->Update();
-	for (unsigned int i = 0; i < count; i++)
-	{
-		model = glm::translate(model, modelPositions[i]);
-		float angle = 20.0f * i;
-		model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-		gameObject.pShader->setMatrix4fv("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
 	cube.pShader->use();
 	cube.pShader->setVec3("viewPos", position);
 	
